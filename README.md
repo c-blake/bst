@@ -73,38 +73,38 @@ nice "shell" (foo-interact) to play around with various tree types & operations.
 
 A more detailed guide to all the files/factoring is as follows:
 
-| LoC | File         | Purpose                                                 |
-|------------------------------------------------------------------------------|
-|  18 | splay.c      | amortized balance; Needs no metadata BUT must splay     |
-|     |              | [ path[] must also be big to handle lop-sided trees.  ] |
-|  16 | ell.c        | rebal for L(k)-pseudo weight balance; only wght metadat |
-|  33 | avl.c        | rebal for AVL Fibonacci/height-balance; 2-bits per node |
-|  61 | rb.c         | rebal for Red-Black/binary symm B-tree; 1-bit per node  |
-|  12 | rot.c        | single-rotation primitive; Also fixes metadat as needed |
-|   9 | init.c       | node metadata init (NOTE: node alloc is external)       |
-|   6 | seek\_most.c | query an extremum (min/max)                             |
-|   8 | seek\_adj.c  | query an adjacent neighbor (predecessor/successor)      |
-|   7 | seek\_key.c  | query by key                                            |
-|  23 | seek\_keyS.c | &seek\_push: path => structural min|max in blk(eql keys)|
-|  10 | seek\_nth.c  | query by rank (when augmented)                          |
-|  10 | seek\_node.c | compute path given a node (when nodes have up links)    |
-|   6 | linkin.c     | link node into tree (after a seek)                      |
-|  27 | unlink.c     | unlink node from tree (after a seek)                    |
-|   5 | weight\_up.c | helper func to update wght metadata after linkin/unlink |
-|   8 | rank.c       | compute rank of a path (when augmented)                 |
-| 259 | total        |                                                         |
-|     |              |                                                         |
-|   9 | stats.c      | compute tree height, interior path length, num. nodes   |
-|  11 | print.c      | print a tree (rotated so depth goes rightward in ttys)  |
-|  57 | ck.c         | impl of \_ck to verify tree properties/invariants       |
-|     |              |                                                         |
-|  52 | MEMBER.h     | inst helper: defines a struct, Clinkage, feature macros |
-|  34 | METHODS.h    | prototypes for all the core API calls                   |
-|  76 | METHODS.c    | assembles via #include the core API calls               |
-|     |              |                                                         |
-|   7 | POOL.h       | pool (array of struct) allocator decls                  |
-|  31 | POOL.c       | pool (array of struct) allocator impl                   |
-|   2 | VMEM.h       | virtual memory allocator decls                          |
-|   6 | VMEM.c       | virtual memory allocator impl                           |
-|     |              |                                                         |
-|  40 | UNDEF.h      | clean up macro namespace (for mult.instance per xlunit) |
+LoC | File         | Purpose
+----|--------------|---------------------------------------------------------
+ 18 | splay.c      | amortized balance; Needs no metadata BUT must splay
+    |              | [ path[] must also be big to handle lop-sided trees. ]
+ 16 | ell.c        | rebal for L(k)-pseudo weight balance; only wght metadat
+ 33 | avl.c        | rebal for AVL Fibonacci/height-balance; 2-bits per node
+ 61 | rb.c         | rebal for Red-Black/binary symm B-tree; 1-bit per node
+ 12 | rot.c        | single-rotation primitive; Also fixes metadat as needed
+  9 | init.c       | node metadata init (NOTE: node alloc is external)
+  6 | seek\_most.c | query an extremum (min/max)
+  8 | seek\_adj.c  | query an adjacent neighbor (predecessor/successor)
+  7 | seek\_key.c  | query by key
+ 23 | seek\_keyS.c | &seek\_push: path => structural min|max in blk(eql keys)
+ 10 | seek\_nth.c  | query by rank (when augmented)
+ 10 | seek\_node.c | compute path given a node (when nodes have up links)
+  6 | linkin.c     | link node into tree (after a seek)
+ 27 | unlink.c     | unlink node from tree (after a seek)
+  5 | weight\_up.c | helper func to update wght metadata after linkin/unlink
+  8 | rank.c       | compute rank of a path (when augmented)
+259 | total        |
+    |              |
+  9 | stats.c      | compute tree height, interior path length, num. nodes
+ 11 | print.c      | print a tree (rotated so depth goes rightward in ttys)
+ 57 | ck.c         | impl of \_ck to verify tree properties/invariants
+    |              |
+ 52 | MEMBER.h     | inst helper: defines a struct, Clinkage, feature macros
+ 34 | METHODS.h    | prototypes for all the core API calls
+ 76 | METHODS.c    | assembles via #include the core API calls
+    |              |
+  7 | POOL.h       | pool (array of struct) allocator decls
+ 31 | POOL.c       | pool (array of struct) allocator impl
+  2 | VMEM.h       | virtual memory allocator decls
+  6 | VMEM.c       | virtual memory allocator impl
+    |              |
+ 40 | UNDEF.h      | clean up macro namespace (for mult.instance per xlunit)

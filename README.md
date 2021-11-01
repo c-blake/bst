@@ -76,7 +76,7 @@ A more detailed guide to all the files/factoring is as follows:
 LoC | File         | Purpose
 ----|--------------|---------------------------------------------------------
  18 | splay.c      | amortized balance; Needs no metadata BUT must splay
-    |              | [ path[] must also be big to handle lop-sided trees. ]
+  - | -            | [ path[] must also be big to handle lop-sided trees. ]
  16 | ell.c        | rebal for L(k)-pseudo weight balance; only wght metadat
  33 | avl.c        | rebal for AVL Fibonacci/height-balance; 2-bits per node
  61 | rb.c         | rebal for Red-Black/binary symm B-tree; 1-bit per node

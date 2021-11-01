@@ -85,7 +85,7 @@ LoC | File         | Purpose
   6 | seek\_most.c | query an extremum (min/max)
   8 | seek\_adj.c  | query an adjacent neighbor (predecessor/successor)
   7 | seek\_key.c  | query by key
- 23 | seek\_keyS.c | &seek\_push: path=> structural mn/mx in block of eq key
+ 23 | seek\_keyS.c | &seek\_push: path=> structural mn/mx in block of eqkey
  10 | seek\_nth.c  | query by rank (when augmented)
  10 | seek\_node.c | compute path given a node (when nodes have up links)
   6 | linkin.c     | link node into tree (after a seek)

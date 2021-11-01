@@ -50,6 +50,7 @@ scalable search" for which BSTs are not a bad answer).
 
 Split & catenate are sort of missing operations, but not useful in a B-tree node
 context (since there every B-tree node is its own allocation arena anyway).
+Oh, and adding support for interval search trees is probably very little work.
 
 Some API notes:
 --------------

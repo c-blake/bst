@@ -85,7 +85,7 @@ LoC | File         | Purpose
   6 | seek\_most.c | query an extremum (min/max)
   8 | seek\_adj.c  | query an adjacent neighbor (predecessor/successor)
   7 | seek\_key.c  | query by key
- 23 | seek\_keyS.c | &seek\_push: path => structural min/max in block of eq keys
+ 23 | seek\_keyS.c | &seek\_push: path=> structural mn/mx in block of eq keys
  10 | seek\_nth.c  | query by rank (when augmented)
  10 | seek\_node.c | compute path given a node (when nodes have up links)
   6 | linkin.c     | link node into tree (after a seek)
@@ -95,7 +95,7 @@ LoC | File         | Purpose
 259 | total        | .
   . | .            | .
   9 | stats.c      | compute tree height, interior path length, num. nodes
- 11 | print.c      | print a tree (rotated so depth goes rightward in terminals)
+ 11 | print.c      | print a tree (rotated so depth goes rightward in ttys)
  57 | ck.c         | impl of \_ck to verify tree properties/invariants
   . | .            | .
  52 | MEMBER.h     | inst helper: defines a struct, Clinkage, feature macros

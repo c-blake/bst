@@ -19,7 +19,7 @@ colorization to make those purple for protected/private. )  This is just one
 simple way to handle multiple instantiations in ANSI C.
 
 The macro name convention is to prefix with `BST_` and for CAPITALS to mean SET
-{ eg. `BST\_WT(node, w)` } while lowercase means get { `BST\_wt(node)` }.  There
+{ eg. `BST_WT(node, w)` } while lowercase means get { `BST_wt(node)` }.  There
 may be a violation or two of this general convention such as BST\_CTX/BST\_NODE.
 
 Some Algorithmic notes:
@@ -85,7 +85,7 @@ LoC | File         | Purpose
   6 | seek\_most.c | query an extremum (min/max)
   8 | seek\_adj.c  | query an adjacent neighbor (predecessor/successor)
   7 | seek\_key.c  | query by key
- 23 | seek\_keyS.c | &seek\_push: path => structural min|max in block of eql key
+ 23 | seek\_keyS.c | &seek\_push: path => structural min/max in block of eq keys
  10 | seek\_nth.c  | query by rank (when augmented)
  10 | seek\_node.c | compute path given a node (when nodes have up links)
   6 | linkin.c     | link node into tree (after a seek)
@@ -94,7 +94,7 @@ LoC | File         | Purpose
   8 | rank.c       | compute rank of a path (when augmented)
 259 | total        | .
   . | .            | .
-  9 | stats.c      | compute tree height, interior path length, number of nodes
+  9 | stats.c      | compute tree height, interior path length, num. nodes
  11 | print.c      | print a tree (rotated so depth goes rightward in terminals)
  57 | ck.c         | impl of \_ck to verify tree properties/invariants
   . | .            | .

@@ -5,9 +5,9 @@ to use seek\_keyS.c:seek\_keyS & seek\_push supports duplicate keys or not (with
 either FIFO or LIFO discipline) for all the above.  Optional parent pointers are
 also available for all the above.
 
-These 5x3x3x2=90 styles of trees would generally be implemented with distinct
-APIs (even with type-parameterized template implementations).  The amortized
-source complexity here is something like 259./90=2.88 LoC per tree style.
+These 5x3x3x2=90 styles of trees are often be implemented with distinct APIs
+(even with type-parameterized template implementations).  The amortized source
+complexity here is something like 259./90=2.88 LoC per such tree style.
 
 Some Syntactic notes:
 --------------------
@@ -26,9 +26,10 @@ Some Algorithmic notes:
 ----------------------
 While CS books/classes usually teach recursive variants, function calls have
 only become more and more expensive relative to alternatives since the 1980s.
-C compilers inlining recursion is limited at best and too finicky to use at
-worst.  Hence non-recursive root-to-node path[]-oriented ideas are used whenever
-possible.  This is an optimization everyone mentions yet no one seems to do.
+C compilers inlining recursion is limited and finicky.  Hence non-recursive
+root-to-node path[]-oriented ideas are used whenever possible.  This is an
+optimization everyone mentions yet no one seems to do.  DB folk sometimes call
+this sort of path a "cursor".
 
 The binary symmetry of all these algorithms is made explicit via a "direction
 index" into a link array of size 2.  The complement (`!s`) fits nicely into C
@@ -56,21 +57,30 @@ Some API notes:
 --------------
 Operations are factored/layered for maximum generality rather than being a
 "turn-key/one shot" style.  It is easy to build the latter on top of the former.
-For example, there are six `seek_` operations that populate `path[]` arrays.
+For example, there are five `seek_` operations that populate `path[]` arrays.
 Any of these can be used first, and then linking into or unlinking from the tree
-can be done afterward.  So, there are only 6+2=8 instead of 6\*2=12 operations.
-Not found entries are indicated to the caller by a negative depth.
+can be done afterward.  This means only 5+2=7 instead of 5\*3=15 find/put/del
+operations.  Missing entries are indicated to the caller by a negative depth.
+Similarly, for duplicate keys, rather than 2 types (set/multiset) or a parameter
+specifying FIFO/etc order among dup keys, callers use another call, `seek_keyS`,
+to move the path to the [01]-extreme of a block of dups.
+
+This clean factoring combined with symmetry and other choices leads the entire
+package to be smaller than naive/-\>left/-\>right implementions I've seen of
+just red-black-tree delete.
 
 To allow generalization of how to dereference "pointers", a `BST_ctx` context
-parameter (declared as `BST_CTX`) is present in all API calls.  For virtual
-memory addresses this can be the empty macro.  It will be a non-empty parameter
-decl & reference for other allocation schemes, e.g. node pools/nodes in files.
+parameter is present in all API calls, declared as `BST_CTX` in client parameter
+lists.  For virtual memory addresses this can be the empty macro.  It will be a
+non-empty parameter decl & reference for other allocation schemes, e.g. node
+pools/nodes in files.
 
 Example Usage:
 -------------
 The `test/` subdir has several programs that use all of this machinery to do
 some non-trivial calculations like sorting and moving median.  There is also a
-nice "shell" (foo-interact) to play around with various tree types & operations.
+nice "shell" (foo-interact) to play around with various tree types & operations
+and print colorized trees to the terminal.
 
 A more detailed guide to all the files/factoring is as follows:
 
@@ -79,8 +89,8 @@ LoC | File         | Purpose
  18 | splay.c      | amortized balance; Needs no metadata BUT must splay
   . | .            | [ path[] must also be big to handle lop-sided trees. ]
  16 | ell.c        | rebal for L(k)-pseudo weight balance; only weight metadata
- 33 | avl.c        | rebal for AVL Fibonacci/height-balance; 2-bits per node
- 61 | rb.c         | rebal for Red-Black/binary symm B-tree; 1-bit per node
+ 33 | avl.c        | rebal for height-balance/AVL/Fibonacci
+ 61 | rb.c         | rebal for Red-Black/binary symmetric B-tree balance
  12 | rot.c        | single-rotation primitive; Also fixes metadata as needed
   9 | init.c       | node metadata init (NOTE: node alloc is external)
   6 | seek\_most.c | query an extremum (min/max)

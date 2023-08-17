@@ -1,5 +1,5 @@
 This one set of files implements well factored/layered binary search trees
-(BSTs) with 5 balancing schemes (none, avl, red-black, L(k), and splay) and 3
+(BSTs) with 5 balancing schemes (none, AVL, red-black, L(k), and splay) and 3
 indexing styles (keyed & ranked, only by key, or only by position).  API choice
 to use seek\_keyS.c:seek\_keyS & seek\_push supports duplicate keys or not (with
 either FIFO or LIFO discipline) for all the above.  Optional parent pointers are
@@ -14,9 +14,9 @@ Some Syntactic notes:
 The generics style is a Cpp #include/#define \_() namespacing macro style of my
 own design dating back to the mid 1990s.  `test/bst-insdel.c` is perhaps the
 easiest to follow example instantiation.  The idea is \_(\_x) is a guarded name
-which the instantiation context reifies. ( I actually tweaked my editor's code
-colorization to make those purple for protected/private. )  This is just one
-simple way to handle multiple instantiations in ANSI C.
+which the instantiation context reifies. { I actually tweaked my editor's code
+colorization to make those p)urple for p)rotected/p)rivate/p)refixed. }  This is
+just one simple way to handle multiple instantiations in ANSI C.
 
 The macro name convention is to prefix with `BST_` and for CAPITALS to mean SET
 { eg. `BST_WT(node, w)` } while lowercase means get { `BST_wt(node)` }.  There
@@ -24,21 +24,23 @@ may be a violation or two of this general convention such as BST\_CTX/BST\_NODE.
 
 Some Algorithmic notes:
 ----------------------
-While CS books/classes usually teach recursive variants, function calls have
-only become more and more expensive relative to alternatives since the 1980s.
-C compilers inlining recursion is limited and finicky.  Hence non-recursive
-root-to-node path[]-oriented ideas are used whenever possible.  This is an
-optimization everyone mentions yet no one seems to do.  DB folk sometimes call
-this sort of path a "cursor".
+While books/classes usually teach recursive variants, function calls have only
+become more expensive relative to alternatives since the 1980s.  Compilers
+inlining recursion is limited & finicky.  So, non-recursive root-to-node
+path[]-oriented ideas are used when possible.  This is an optimization everyone
+mentions yet no one seems to do.  DB folk sometimes call this sort of path a
+"cursor", but its most easy to think of it as a more complete pointer into the
+data structure.
 
 The binary symmetry of all these algorithms is made explicit via a "direction
-index" into a link array of size 2.  The complement (`!s`) fits nicely into C
-syntax.  This results in much code reduction (up to 8x in some cases) as well as
-reasoning reduction (though I have never tried to teach trees this way).
+index" into a link array of size 2, `s` for s)ide, say.  The complement (`!s`)
+is easy with C syntax.  Explicit use of this symmetry can result in much code
+reduction (up to 8x in some cases) as well as reasoning reduction (though I have
+never tried to teach trees this way).
 
 Up links/parent pointers are allowed & maintained optionally, but this is often
-a waste of space.  Sometimes you might (like a doubly linked list) really need
-to be able to have a node pointer be able to delete itself or some such, though.
+a waste of both space to store & time to update.  Sometime you may really need a
+node pointer be enough to delete itself, though (like doubly linked lists).
 
 What I call here "ell"- or L(k)-balance comes from: A New Method for Balancing
 Binary Search Trees by Salvador Roura, 2001.  It can be convenient if you want
@@ -60,13 +62,14 @@ Operations are factored/layered for maximum generality rather than being a
 For example, there are five `seek_` operations that populate `path[]` arrays.
 Any of these can be used first, and then linking into or unlinking from the tree
 can be done afterward.  This means only 5+2=7 instead of 5\*3=15 find/put/del
-operations.  Missing entries are indicated to the caller by a negative depth.
-Similarly, for duplicate keys, rather than 2 types (set/multiset) or a parameter
-specifying FIFO/etc order among dup keys, callers use another call, `seek_keyS`,
-to move the path to the [01]-extreme of a block of dups.
+operations.  Missing entries are indicated to the caller by a negative depth and
+zero depth is often only possible for the empty tree.  Similarly, for duplicate
+keys, rather than 2 types (set/multiset) or a parameter specifying FIFO/etc
+order among dup keys, callers use another call, `seek_keyS`, to move the path to
+the [01]-extreme of a block of dups.
 
 This clean factoring combined with symmetry and other choices leads the entire
-package to be smaller than naive/-\>left/-\>right implementions I've seen of
+package to be smaller than naive/-\>left/-\>right implementations I've seen of
 just red-black-tree delete.
 
 To allow generalization of how to dereference "pointers", a `BST_ctx` context

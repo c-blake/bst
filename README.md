@@ -1,29 +1,29 @@
 This one set of files implements well factored/layered binary search trees
 (BSTs) with 5 balancing schemes (none, AVL, red-black, L(k), and splay) and 3
 indexing styles (keyed & ranked, only by key, or only by position).  API choice
-to use seek\_keyS.c:seek\_keyS & seek\_push supports duplicate keys or not (with
-either FIFO or LIFO discipline) for all the above.  Optional parent pointers are
+to use `seek_keyS.c:seek_keyS` & `seek_push` supports duplicate keys or not
+(with FIFO | LIFO discipline) for all the above.  Optional parent pointers are
 also available for all the above.
 
 These 5x3x3x2=90 styles of trees are often be implemented with distinct APIs
 (even with type-parameterized template implementations).  The amortized source
-complexity here is something like 259./90=2.88 LoC per such tree style.
+complexity here is something like 259 LoC/90=2.88 lines per such tree style.
 
-Some Syntactic notes:
---------------------
-The generics style is a Cpp #include/#define \_() namespacing macro style of my
-own design dating back to the mid 1990s.  `test/bst-insdel.c` is perhaps the
-easiest to follow example instantiation.  The idea is \_(\_x) is a guarded name
-which the instantiation context reifies. { I actually tweaked my editor's code
-colorization to make those p)urple for p)rotected/p)rivate/p)refixed. }  This is
-just one simple way to handle multiple instantiations in ANSI C.
+# Syntactic notes
+The generics style is a Cpp `#include/#define _()` namespacing macro style of my
+own design dating back to the mid 1990s.  Perhaps the easiest to follow example
+instance is [`test/bst-insdel.c`](test/bst-insdel.c).  The idea is `_(_x)` is a
+guarded name which the instantiation context makes into a real name. { I tweaked
+my editor's code colorizing to make those P)urple for P)rotected, P)rivate,
+P)refixed. } This is just one simple way to handle multiple instantiations in
+ANSI C, and to my feeling the most direct.[^1]
 
 The macro name convention is to prefix with `BST_` and for CAPITALS to mean SET
-{ eg. `BST_WT(node, w)` } while lowercase means get { `BST_wt(node)` }.  There
-may be a violation or two of this general convention such as BST\_CTX/BST\_NODE.
+{ eg. `BST_WT(node, w)` to set the weight `wt` to `w` } while lowercase means
+get { `BST_wt(node)` to read it }.[^2]
 
-Some Algorithmic notes:
-----------------------
+# Algorithmic notes
+
 While books/classes usually teach recursive variants, function calls have only
 become more expensive relative to alternatives since the 1980s.  Compilers
 inlining recursion is limited & finicky.  So, non-recursive root-to-node
@@ -53,10 +53,11 @@ scalable search" for which BSTs are not a bad answer).
 
 Split & catenate are sort of missing operations, but not useful in a B-tree node
 context (since there every B-tree node is its own allocation arena anyway).
-Oh, and adding support for interval search trees is probably very little work.
+Oh, and adding support for interval search trees / other augmentations is likely
+little more work than some tweaks to `rot.c` & a new `seek_`.
 
-Some API notes:
---------------
+# API notes
+
 Operations are factored/layered for maximum generality rather than being a
 "turn-key/one shot" style.  It is easy to build the latter on top of the former.
 For example, there are five `seek_` operations that populate `path[]` arrays.
@@ -78,18 +79,17 @@ lists.  For virtual memory addresses this can be the empty macro.  It will be a
 non-empty parameter decl & reference for other allocation schemes, e.g. node
 pools/nodes in files.
 
-Example Usage:
--------------
-The `test/` subdir has several programs that use all of this machinery to do
-some non-trivial calculations like sorting and moving median.  There is also a
-nice "shell" (foo-interact) to play around with various tree types & operations
-and print colorized trees to the terminal.
+# Example Usage
+[`test/`](test/) has several programs that use all of this machinery to do some
+non-trivial calculations like sorting and moving median.  There is also a nice
+"shell" (foo-interact) to play around with various tree types & operations and
+print colorized trees to terminals.
 
 A more detailed guide to all the files/factoring is as follows:
 
 LoC | File         | Purpose
 ----|--------------|---------------------------------------------------------
- 18 | splay.c      | amortized balance; Needs no metadata BUT must splay
+ 18 | splay.c      | amortized balance; No metadata BUT caller MUST splay()
   . | .            | [ path[] must also be big to handle lop-sided trees. ]
  16 | ell.c        | rebal for L(k)-pseudo weight balance; only weight metadata
  33 | avl.c        | rebal for height-balance/AVL/Fibonacci
@@ -122,3 +122,12 @@ LoC | File         | Purpose
   6 | VMEM.c       | virtual memory allocator impl
   . | .            | .
  40 | UNDEF.h      | clean up macro namespace (for mult.instance per xl unit)
+
+[^1]: In fact, it lacking only relatively backward compatible syntax support in
+the pre-processor to have "parameterized files" where a user could add a list
+of defines to an inclusion directive say `#include "bst.h" _(_x)=myName_##_x`.
+This manual monomorphization has many virtues, but the world has generally been
+more warmly receiving of automated instantiation.
+
+[^2]: There may be a violation or two of this general convention such as
+`BST_CTX`/`BST_NODE`.
